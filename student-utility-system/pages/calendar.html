@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Academic Calendar - Student Utility and Event Management System">
+    <title>Academic Calendar - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .calendar-container {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-6);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: var(--gray-200);
+            border: 1px solid var(--gray-200);
+        }
+
+        .calendar-day-header {
+            background: var(--gray-100);
+            padding: var(--space-3);
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: var(--font-size-sm);
+        }
+
+        .calendar-day {
+            background: var(--white);
+            min-height: 100px;
+            padding: var(--space-2);
+            position: relative;
+        }
+
+        .calendar-day.other-month {
+            background: var(--gray-50);
+            color: var(--gray-400);
+        }
+
+        .calendar-day.today {
+            background: #dbeafe;
+        }
+
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .calendar-event {
+            font-size: var(--font-size-xs);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .calendar-event.event {
+            background: #dbeafe;
+            color: var(--primary-blue);
+        }
+
+        .calendar-event.holiday {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .calendar-event.exam {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .legend {
+            display: flex;
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: var(--radius-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list" id="navList">
+                        <!-- Navigation will be loaded -->
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome">Academic Calendar</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">U</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">User</div>
+                            <div class="dashboard-user-role" id="userRole">User</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Calendar Content -->
+            <div class="dashboard-content">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <h2 id="currentMonth">January 2026</h2>
+                        <div style="display: flex; gap: var(--space-3);">
+                            <button class="btn btn-outline btn-sm" onclick="previousMonth()">← Previous</button>
+                            <button class="btn btn-primary btn-sm" onclick="currentMonth()">Today</button>
+                            <button class="btn btn-outline btn-sm" onclick="nextMonth()">Next →</button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be generated here -->
+                    </div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #dbeafe;"></div>
+                            <span>Events</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fee2e2;"></div>
+                            <span>Holidays</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fef3c7;"></div>
+                            <span>Exams</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireAuth();
+
+        const currentUser = Auth.getCurrentUser();
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+        document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+
+        // Load navigation
+        function loadNavigation() {
+            const navList = document.getElementById('navList');
+            let dashboardLink = currentUser.role === 'student' ? '../dashboards/student.html' :
+                currentUser.role === 'faculty' ? '../dashboards/faculty.html' :
+                    '../dashboards/admin.html';
+
+            navList.innerHTML = `
+                <li class="dashboard-nav-item">
+                    <a href="${dashboardLink}" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="../dashboards/profile.html" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">👤</span>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="calendar.html" class="dashboard-nav-link active">
+                        <span class="dashboard-nav-icon">📅</span>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="help.html" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">❓</span>
+                        <span>Help</span>
+                    </a>
+                </li>
+            `;
+        }
+
+        // Calendar logic
+        let currentDate = new Date();
+        const monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
+
+        // Sample calendar data
+        const calendarData = {
+            '2026-01-26': { type: 'holiday', title: 'Republic Day' },
+            '2026-01-31': { type: 'event', title: 'Blockchain Tech' },
+            '2026-02-14': { type: 'event', title: 'Valentine Social' },
+            '2026-02-20': { type: 'exam', title: 'Mid-term Exam' },
+            '2026-03-08': { type: 'holiday', title: 'Holi' },
+            '2026-03-15': { type: 'event', title: 'Tech Fest' }
+        };
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+
+            let html = '';
+
+            // Day headers
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(day => {
+                html += `<div class="calendar-day-header">${day}</div>`;
+            });
+
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                html += `<div class="calendar-day other-month">
+                    <div class="calendar-day-number">${daysInPrevMonth - i}</div>
+                </div>`;
+            }
+
+            // Current month days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = isCurrentMonth && day === today.getDate();
+                const dayClass = isToday ? 'calendar-day today' : 'calendar-day';
+
+                let eventsHtml = '';
+                if (calendarData[dateStr]) {
+                    const event = calendarData[dateStr];
+                    eventsHtml = `<div class="calendar-event ${event.type}">${event.title}</div>`;
+                }
+
+                html += `<div class="${dayClass}">
+                    <div class="calendar-day-number">${day}</div>
+                    ${eventsHtml}
+                </div>`;
+            }
+
+            // Next month days
+            const remainingDays = 42 - (firstDay + daysInMonth);
+            for (let day = 1; day <= remainingDays; day++) {
+                html += `<div class="calendar-day other-month">
+                    <div class="calendar-day-number">${day}</div>
+                </div>`;
+            }
+
+            document.getElementById('calendarGrid').innerHTML = html;
+        }
+
+        function previousMonth() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function currentMonth() {
+            currentDate = new Date();
+            renderCalendar();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        loadNavigation();
+        renderCalendar();
+    </script>
+</body>
+
+</html>

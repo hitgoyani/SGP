@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User Profile - Student Utility and Event Management System">
+    <title>My Profile - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list" id="navList">
+                        <!-- Navigation will be loaded based on role -->
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome">My Profile</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">U</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">User</div>
+                            <div class="dashboard-user-role" id="userRole">User</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Profile Header -->
+                <div class="card" style="margin-bottom: var(--space-6);">
+                    <div style="display: flex; align-items: center; gap: var(--space-6);">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; background: var(--primary-blue); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 2.5rem; font-weight: 700;"
+                            id="profileAvatar">
+                            U
+                        </div>
+                        <div style="flex: 1;">
+                            <h2 id="profileName" style="margin-bottom: var(--space-2);">User Name</h2>
+                            <p style="color: var(--gray-600); margin-bottom: var(--space-2);" id="profileEmail">
+                                user@charusat.edu.in</p>
+                            <span class="badge badge-primary" id="profileRole">Student</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="grid grid-2" style="gap: var(--space-6); margin-bottom: var(--space-6);">
+                    <!-- Personal Information -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Personal Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="margin-bottom: var(--space-4);">
+                                <label
+                                    style="display: block; font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2);">Full
+                                    Name</label>
+                                <p id="infoName" style="color: var(--gray-800);">-</p>
+                            </div>
+                            <div style="margin-bottom: var(--space-4);">
+                                <label
+                                    style="display: block; font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2);">Email
+                                    Address</label>
+                                <p id="infoEmail" style="color: var(--gray-800);">-</p>
+                            </div>
+                            <div style="margin-bottom: var(--space-4);" id="studentInfo">
+                                <label
+                                    style="display: block; font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2);">Enrollment
+                                    No</label>
+                                <p id="infoEnrollment" style="color: var(--gray-800);">-</p>
+                            </div>
+                            <div style="margin-bottom: var(--space-4);">
+                                <label
+                                    style="display: block; font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2);">Department</label>
+                                <p id="infoDepartment" style="color: var(--gray-800);">-</p>
+                            </div>
+                            <div id="facultyInfo" style="display: none;">
+                                <label
+                                    style="display: block; font-weight: 600; color: var(--gray-700); margin-bottom: var(--space-2);">Designation</label>
+                                <p id="infoDesignation" style="color: var(--gray-800);">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Summary -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Activity Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <div style="margin-bottom: var(--space-5);">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="color: var(--gray-700); font-weight: 500;">Events Registered</span>
+                                    <span
+                                        style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--primary-blue);"
+                                        id="statsRegistered">0</span>
+                                </div>
+                                <div
+                                    style="width: 100%; height: 8px; background: var(--gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                    <div id="progressRegistered"
+                                        style="height: 100%; background: var(--primary-blue); width: 0%; transition: width 0.3s;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: var(--space-5);" id="statsCreatedSection">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="color: var(--gray-700); font-weight: 500;">Events Created</span>
+                                    <span
+                                        style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--success);"
+                                        id="statsCreated">0</span>
+                                </div>
+                                <div
+                                    style="width: 100%; height: 8px; background: var(--gray-200); border-radius: var(--radius-full); overflow: hidden;">
+                                    <div id="progressCreated"
+                                        style="height: 100%; background: var(--success); width: 0%; transition: width 0.3s;">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span style="color: var(--gray-700); font-weight: 500;">Total Events</span>
+                                    <span
+                                        style="font-size: var(--font-size-2xl); font-weight: 700; color: var(--gray-700);"
+                                        id="statsTotal">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Account Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: var(--gray-600); margin-bottom: var(--space-4);">
+                            Profile editing and password changes are currently not available in this demo version.
+                        </p>
+                        <div style="display: flex; gap: var(--space-3);">
+                            <button class="btn btn-secondary" disabled>Edit Profile</button>
+                            <button class="btn btn-secondary" disabled>Change Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireAuth();
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info in header
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+        document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+
+        // Load navigation based on role
+        function loadNavigation() {
+            const navList = document.getElementById('navList');
+            let navItems = '';
+            let dashboardLink = '';
+
+            if (currentUser.role === 'student') {
+                dashboardLink = 'student.html';
+            } else if (currentUser.role === 'faculty') {
+                dashboardLink = 'faculty.html';
+            } else if (currentUser.role === 'admin') {
+                dashboardLink = 'admin.html';
+            }
+
+            navItems = `
+                <li class="dashboard-nav-item">
+                    <a href="${dashboardLink}" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">🏠</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="profile.html" class="dashboard-nav-link active">
+                        <span class="dashboard-nav-icon">👤</span>
+                        <span>My Profile</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="../pages/calendar.html" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">📅</span>
+                        <span>Calendar</span>
+                    </a>
+                </li>
+                <li class="dashboard-nav-item">
+                    <a href="../pages/help.html" class="dashboard-nav-link">
+                        <span class="dashboard-nav-icon">❓</span>
+                        <span>Help</span>
+                    </a>
+                </li>
+            `;
+
+            navList.innerHTML = navItems;
+        }
+
+        // Load profile data
+        function loadProfileData() {
+            // Profile header
+            document.getElementById('profileAvatar').textContent = Utils.getInitials(currentUser.name);
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+
+            // Personal information
+            document.getElementById('infoName').textContent = currentUser.name;
+            document.getElementById('infoEmail').textContent = currentUser.email;
+            document.getElementById('infoDepartment').textContent = currentUser.department || '-';
+
+            if (currentUser.role === 'student') {
+                document.getElementById('infoEnrollment').textContent = currentUser.enrollmentNo || '-';
+                document.getElementById('studentInfo').style.display = 'block';
+                document.getElementById('facultyInfo').style.display = 'none';
+            } else if (currentUser.role === 'faculty') {
+                document.getElementById('studentInfo').style.display = 'none';
+                document.getElementById('facultyInfo').style.display = 'block';
+                document.getElementById('infoDesignation').textContent = currentUser.designation || '-';
+            } else {
+                document.getElementById('studentInfo').style.display = 'none';
+                document.getElementById('facultyInfo').style.display = 'none';
+            }
+
+            // Activity stats
+            const registrations = EventManager.getUserRegistrations(currentUser.id);
+            const createdEvents = EventManager.getEventsByOrganizer(currentUser.id);
+            const totalEvents = EventManager.getAllEvents().length;
+
+            document.getElementById('statsRegistered').textContent = registrations.length;
+            document.getElementById('progressRegistered').style.width = `${Math.min((registrations.length / 10) * 100, 100)}%`;
+
+            if (currentUser.role === 'faculty' || currentUser.role === 'admin') {
+                document.getElementById('statsCreated').textContent = createdEvents.length;
+                document.getElementById('progressCreated').style.width = `${Math.min((createdEvents.length / 10) * 100, 100)}%`;
+                document.getElementById('statsCreatedSection').style.display = 'block';
+            } else {
+                document.getElementById('statsCreatedSection').style.display = 'none';
+            }
+
+            document.getElementById('statsTotal').textContent = totalEvents;
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        loadNavigation();
+        loadProfileData();
+    </script>
+</body>
+
+</html>

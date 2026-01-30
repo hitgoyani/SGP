@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login to Student Utility and Event Management System">
+    <title>Login - Student Utility System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: var(--space-8);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-4);
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .login-title {
+            font-size: var(--font-size-3xl);
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .login-subtitle {
+            color: var(--gray-600);
+            font-size: var(--font-size-base);
+        }
+
+        .demo-credentials {
+            background-color: #dbeafe;
+            border-left: 4px solid var(--primary-blue);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-6);
+        }
+
+        .demo-credentials-title {
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: var(--space-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .demo-credentials-list {
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+            line-height: 1.8;
+        }
+
+        .demo-credentials-list strong {
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">SU</div>
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle">Student Utility & Event Management System</p>
+            </div>
+
+            <div class="demo-credentials">
+                <div class="demo-credentials-title">🔑 Demo Credentials</div>
+                <div class="demo-credentials-list">
+                    <strong>Student:</strong> student@charusat.edu.in / student123<br>
+                    <strong>Faculty:</strong> faculty@charusat.edu.in / faculty123<br>
+                    <strong>Admin:</strong> admin@charusat.edu.in / admin123
+                </div>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="Enter your email" required>
+                    <span class="form-error" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="Enter your password" required>
+                    <span class="form-error" id="passwordError"></span>
+                </div>
+
+                <div id="loginError" class="alert alert-error hidden" style="margin-bottom: var(--space-4);"></div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                    Sign In
+                </button>
+            </form>
+
+            <div
+                style="text-align: center; margin-top: var(--space-6); color: var(--gray-600); font-size: var(--font-size-sm);">
+                <p>© 2026 CHARUSAT University. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Redirect if already authenticated
+        Auth.redirectIfAuthenticated();
+
+        // Handle login form submission
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('passwordError').textContent = '';
+            document.getElementById('loginError').classList.add('hidden');
+
+            // Get form values
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Validate
+            let hasError = false;
+
+            if (!Utils.validateEmail(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                hasError = true;
+            }
+
+            if (!Utils.validateRequired(password)) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            Utils.showLoading(submitBtn);
+
+            // Simulate network delay
+            setTimeout(() => {
+                // Attempt login
+                const result = Auth.login(email, password);
+
+                Utils.hideLoading(submitBtn);
+
+                if (result.success) {
+                    Utils.showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        Auth.redirectToDashboard(result.user.role);
+                    }, 1000);
+                } else {
+                    const errorDiv = document.getElementById('loginError');
+                    errorDiv.textContent = result.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            }, 800);
+        });
+
+        // Auto-fill on demo credential click
+        document.querySelector('.demo-credentials-list').addEventListener('click', function (e) {
+            const text = e.target.textContent;
+            if (text.includes('student@')) {
+                document.getElementById('email').value = 'student@charusat.edu.in';
+                document.getElementById('password').value = 'student123';
+            } else if (text.includes('faculty@')) {
+                document.getElementById('email').value = 'faculty@charusat.edu.in';
+                document.getElementById('password').value = 'faculty123';
+            } else if (text.includes('admin@')) {
+                document.getElementById('email').value = 'admin@charusat.edu.in';
+                document.getElementById('password').value = 'admin123';
+            }
+        });
+    </script>
+</body>
+
+</html>

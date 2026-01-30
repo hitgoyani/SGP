@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - Student Utility and Event Management System">
+    <title>Admin Dashboard - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="admin.html" class="dashboard-nav-link active">
+                                <span class="dashboard-nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../events/event-list.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📅</span>
+                                <span>All Events</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="profile.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">👤</span>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/calendar.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📆</span>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/help.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">❓</span>
+                                <span>Help</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome" id="welcomeMessage">Admin Dashboard</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">AD</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">Admin</div>
+                            <div class="dashboard-user-role">Administrator</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-change">Active users</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-label">Total Events</div>
+                        <div class="stat-value" id="totalEvents">0</div>
+                        <div class="stat-change">All time</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Pending Approvals</div>
+                        <div class="stat-value" id="pendingApprovals">0</div>
+                        <div class="stat-change">Requires action</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Total Registrations</div>
+                        <div class="stat-value" id="totalRegistrations">0</div>
+                        <div class="stat-change">Across all events</div>
+                    </div>
+                </div>
+
+                <!-- Pending Events Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">Pending Event Approvals</h2>
+                    </div>
+                    <div id="pendingEventsContainer">
+                        <!-- Pending events will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- All Events Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">All Events</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Organizer</th>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Registrations</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allEventsTableBody">
+                                <!-- Events will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Approval Modal -->
+    <div id="approvalModal" class="modal-overlay hidden" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Event Approval</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Event details will be loaded here -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- Action buttons will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireRole('admin');
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info in header
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+
+        // Load statistics
+        function loadStatistics() {
+            const stats = EventManager.getStatistics();
+            document.getElementById('totalEvents').textContent = stats.totalEvents;
+            document.getElementById('pendingApprovals').textContent = stats.pendingEvents;
+            document.getElementById('totalRegistrations').textContent = stats.totalRegistrations;
+        }
+
+        // Load pending events
+        function loadPendingEvents() {
+            const pendingEvents = EventManager.getPendingEvents();
+            const container = document.getElementById('pendingEventsContainer');
+
+            if (pendingEvents.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✅</div>
+            <h3 class="empty-state-title">No Pending Approvals</h3>
+            <p class="empty-state-description">All events have been reviewed</p>
+          </div>
+        `;
+                return;
+            }
+
+            container.innerHTML = pendingEvents.map(event => `
+        <div class="card" style="margin-bottom: var(--space-4);">
+          <div class="card-header">
+            <h3 class="card-title">${Utils.escapeHtml(event.title)}</h3>
+            <div style="display: flex; gap: var(--space-3); margin-top: var(--space-2);">
+              <span class="badge badge-${event.category.toLowerCase()}">${event.category}</span>
+              <span class="badge badge-pending">Pending</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p><strong>Organizer:</strong> ${Utils.escapeHtml(event.organizer)}</p>
+            <p><strong>Date:</strong> ${Utils.formatDate(event.date)} at ${event.time}</p>
+            <p><strong>Venue:</strong> ${Utils.escapeHtml(event.venue)}</p>
+            <p><strong>Max Participants:</strong> ${event.maxParticipants}</p>
+            <p><strong>Description:</strong> ${Utils.escapeHtml(event.description)}</p>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-success" onclick="approveEvent(${event.id})">✓ Approve</button>
+            <button class="btn btn-danger" onclick="showRejectModal(${event.id})">✕ Reject</button>
+            <button class="btn btn-outline" onclick="viewEvent(${event.id})">View Details</button>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // Load all events
+        function loadAllEvents() {
+            const allEvents = EventManager.getAllEvents();
+            const tbody = document.getElementById('allEventsTableBody');
+
+            if (allEvents.length === 0) {
+                tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: var(--space-12);">
+              <div class="empty-state-description">No events in the system</div>
+            </td>
+          </tr>
+        `;
+                return;
+            }
+
+            tbody.innerHTML = allEvents.map(event => {
+                let statusBadge = '';
+                if (event.status === 'approved') {
+                    statusBadge = '<span class="badge badge-approved">Approved</span>';
+                } else if (event.status === 'pending') {
+                    statusBadge = '<span class="badge badge-pending">Pending</span>';
+                } else if (event.status === 'rejected') {
+                    statusBadge = '<span class="badge badge-rejected">Rejected</span>';
+                }
+
+                return `
+          <tr>
+            <td><strong>${Utils.escapeHtml(event.title)}</strong></td>
+            <td>${Utils.escapeHtml(event.organizer)}</td>
+            <td>${Utils.formatDateShort(event.date)}</td>
+            <td><span class="badge badge-secondary">${event.category}</span></td>
+            <td>${statusBadge}</td>
+            <td>${event.registeredCount} / ${event.maxParticipants}</td>
+            <td>
+              <button class="btn btn-sm btn-outline" onclick="viewEvent(${event.id})">View</button>
+            </td>
+          </tr>
+        `;
+            }).join('');
+        }
+
+        // Approve event
+        function approveEvent(eventId) {
+            if (!confirm('Are you sure you want to approve this event?')) return;
+
+            EventManager.approveEvent(eventId);
+            Utils.showToast('Event approved successfully!', 'success');
+            refreshData();
+        }
+
+        // Show reject modal
+        function showRejectModal(eventId) {
+            const event = EventManager.getEventById(eventId);
+            const modal = document.getElementById('approvalModal');
+
+            document.getElementById('modalTitle').textContent = 'Reject Event';
+            document.getElementById('modalBody').innerHTML = `
+        <p><strong>Event:</strong> ${Utils.escapeHtml(event.title)}</p>
+        <div class="form-group">
+          <label for="rejectionReason" class="form-label">Reason for Rejection *</label>
+          <textarea 
+            id="rejectionReason" 
+            class="form-textarea" 
+            placeholder="Please provide a reason for rejecting this event..."
+            required
+          ></textarea>
+        </div>
+      `;
+            document.getElementById('modalFooter').innerHTML = `
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="rejectEvent(${eventId})">Reject Event</button>
+      `;
+
+            modal.classList.remove('hidden');
+        }
+
+        // Reject event
+        function rejectEvent(eventId) {
+            const reason = document.getElementById('rejectionReason').value.trim();
+
+            if (!reason) {
+                Utils.showToast('Please provide a reason for rejection', 'error');
+                return;
+            }
+
+            EventManager.rejectEvent(eventId, reason);
+            Utils.showToast('Event rejected', 'success');
+            closeModal();
+            refreshData();
+        }
+
+        // View event details
+        function viewEvent(eventId) {
+            window.location.href = `../events/event-detail.html?id=${eventId}`;
+        }
+
+        // Close modal
+        function closeModal(e) {
+            // If called with an event and it's not a click on the overlay itself, ignore
+            if (e && e.target !== e.currentTarget) return;
+
+            // Close the modal
+            const modal = document.getElementById('approvalModal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Refresh all data
+        function refreshData() {
+            loadStatistics();
+            loadPendingEvents();
+            loadAllEvents();
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize dashboard
+        refreshData();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Event Details - Student Utility and Event Management System">
+    <title>Event Details - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .event-detail-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .event-detail-header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: var(--white);
+            padding: var(--space-8);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-6);
+        }
+
+        .event-detail-title {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .event-detail-meta {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .event-detail-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+
+        .event-detail-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .event-detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-detail-label {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+            display: block;
+        }
+
+        .event-detail-value {
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .event-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .event-info-item {
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .event-info-icon {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-2);
+        }
+
+        .event-info-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            margin-bottom: var(--space-1);
+        }
+
+        .event-info-value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list" id="navList">
+                        <!-- Navigation will be loaded based on role -->
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <button class="btn btn-secondary btn-sm" onclick="history.back()">← Back</button>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">U</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">User</div>
+                            <div class="dashboard-user-role" id="userRole">User</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="event-detail-container" id="eventDetailContainer">
+                    <!-- Event details will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireAuth();
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+        document.getElementById('userRole').textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+
+        // Get event ID from URL
+        const eventId = Utils.getQueryParam('id');
+
+        if (!eventId) {
+            window.location.href = 'event-list.html';
+        }
+
+        // Load navigation based on role
+        function loadNavigation() {
+            const navList = document.getElementById('navList');
+            let navItems = '';
+
+            if (currentUser.role === 'student') {
+                navItems = `
+          <li class="dashboard-nav-item">
+            <a href="../dashboards/student.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="dashboard-nav-item">
+            <a href="event-list.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">📅</span>
+              <span>Browse Events</span>
+            </a>
+          </li>
+        `;
+            } else if (currentUser.role === 'faculty') {
+                navItems = `
+          <li class="dashboard-nav-item">
+            <a href="../dashboards/faculty.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="dashboard-nav-item">
+            <a href="create-event.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">➕</span>
+              <span>Create Event</span>
+            </a>
+          </li>
+          <li class="dashboard-nav-item">
+            <a href="event-list.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">📅</span>
+              <span>All Events</span>
+            </a>
+          </li>
+        `;
+            } else if (currentUser.role === 'admin') {
+                navItems = `
+          <li class="dashboard-nav-item">
+            <a href="../dashboards/admin.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="dashboard-nav-item">
+            <a href="event-list.html" class="dashboard-nav-link">
+              <span class="dashboard-nav-icon">📅</span>
+              <span>All Events</span>
+            </a>
+          </li>
+        `;
+            }
+
+            navList.innerHTML = navItems;
+        }
+
+        // Load event details
+        function loadEventDetails() {
+            const event = EventManager.getEventById(eventId);
+
+            if (!event) {
+                document.getElementById('eventDetailContainer').innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">❌</div>
+            <h3 class="empty-state-title">Event Not Found</h3>
+            <p class="empty-state-description">The event you're looking for doesn't exist</p>
+            <a href="event-list.html" class="btn btn-primary">Browse Events</a>
+          </div>
+        `;
+                return;
+            }
+
+            const isRegistered = currentUser.role === 'student' &&
+                EventManager.isUserRegistered(event.id, currentUser.id);
+            const isFull = event.registeredCount >= event.maxParticipants;
+            const canRegister = currentUser.role === 'student' &&
+                event.status === 'approved' &&
+                !isRegistered &&
+                !isFull;
+
+            let actionButtons = '';
+            if (currentUser.role === 'student') {
+                if (isRegistered) {
+                    actionButtons = `
+            <button class="btn btn-danger btn-lg" onclick="cancelRegistration()">
+              Cancel Registration
+            </button>
+          `;
+                } else if (canRegister) {
+                    actionButtons = `
+            <button class="btn btn-primary btn-lg" onclick="registerForEvent()">
+              Register for Event
+            </button>
+          `;
+                } else if (isFull) {
+                    actionButtons = `
+            <button class="btn btn-secondary btn-lg" disabled>
+              Event Full
+            </button>
+          `;
+                } else if (event.status !== 'approved') {
+                    actionButtons = `
+            <button class="btn btn-secondary btn-lg" disabled>
+              Event Not Approved
+            </button>
+          `;
+                }
+            }
+
+            const container = document.getElementById('eventDetailContainer');
+            container.innerHTML = `
+        <div class="event-detail-header">
+          <h1 class="event-detail-title">${Utils.escapeHtml(event.title)}</h1>
+          <div class="event-detail-meta">
+            <span class="badge badge-${event.category.toLowerCase()}" style="background: rgba(255,255,255,0.2); color: white; font-size: var(--font-size-base);">${event.category}</span>
+            <span class="badge badge-${event.status}" style="background: rgba(255,255,255,0.2); color: white; font-size: var(--font-size-base);">${event.status.toUpperCase()}</span>
+            ${isRegistered ? '<span class="badge badge-success" style="background: rgba(255,255,255,0.2); color: white; font-size: var(--font-size-base);">✓ Registered</span>' : ''}
+          </div>
+        </div>
+
+        <div class="event-info-grid" style="margin-bottom: var(--space-6);">
+          <div class="event-info-item">
+            <div class="event-info-icon">📅</div>
+            <div class="event-info-label">Date</div>
+            <div class="event-info-value">${Utils.formatDate(event.date)}</div>
+          </div>
+          <div class="event-info-item">
+            <div class="event-info-icon">🕒</div>
+            <div class="event-info-label">Time</div>
+            <div class="event-info-value">${event.time}</div>
+          </div>
+          <div class="event-info-item">
+            <div class="event-info-icon">📍</div>
+            <div class="event-info-label">Venue</div>
+            <div class="event-info-value">${Utils.escapeHtml(event.venue)}</div>
+          </div>
+          <div class="event-info-item">
+            <div class="event-info-icon">👥</div>
+            <div class="event-info-label">Participants</div>
+            <div class="event-info-value">${event.registeredCount} / ${event.maxParticipants}</div>
+          </div>
+        </div>
+
+        <div class="event-detail-card">
+          <div class="event-detail-section">
+            <span class="event-detail-label">Description</span>
+            <p class="event-detail-value">${Utils.escapeHtml(event.description)}</p>
+          </div>
+
+          <div class="event-detail-section">
+            <span class="event-detail-label">Organizer</span>
+            <p class="event-detail-value">${Utils.escapeHtml(event.organizer)}</p>
+          </div>
+
+          <div class="event-detail-section">
+            <span class="event-detail-label">Event Status</span>
+            <p class="event-detail-value">
+              ${Utils.getDaysUntil(event.date)}
+              ${event.status === 'rejected' && event.rejectionReason ? `<br><span style="color: var(--error);">Rejection Reason: ${Utils.escapeHtml(event.rejectionReason)}</span>` : ''}
+            </p>
+          </div>
+
+          ${actionButtons ? `
+            <div class="event-detail-section" style="margin-top: var(--space-6);">
+              ${actionButtons}
+            </div>
+          ` : ''}
+        </div>
+      `;
+        }
+
+        // Register for event
+        function registerForEvent() {
+            const result = EventManager.registerForEvent(eventId, currentUser.id);
+            if (result.success) {
+                Utils.showToast(result.message, 'success');
+                setTimeout(() => {
+                    loadEventDetails();
+                }, 500);
+            } else {
+                Utils.showToast(result.message, 'error');
+            }
+        }
+
+        // Cancel registration
+        function cancelRegistration() {
+            if (!confirm('Are you sure you want to cancel your registration?')) return;
+
+            const result = EventManager.cancelRegistration(eventId, currentUser.id);
+            if (result.success) {
+                Utils.showToast(result.message, 'success');
+                setTimeout(() => {
+                    loadEventDetails();
+                }, 500);
+            } else {
+                Utils.showToast(result.message, 'error');
+            }
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        loadNavigation();
+        loadEventDetails();
+    </script>
+</body>
+
+</html>

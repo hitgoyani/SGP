@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Faculty Dashboard - Student Utility and Event Management System">
+    <title>Faculty Dashboard - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="faculty.html" class="dashboard-nav-link active">
+                                <span class="dashboard-nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../events/create-event.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">➕</span>
+                                <span>Create Event</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../events/event-list.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📅</span>
+                                <span>All Events</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="profile.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">👤</span>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/calendar.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📆</span>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/help.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">❓</span>
+                                <span>Help</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome" id="welcomeMessage">Welcome back!</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">FA</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">Faculty</div>
+                            <div class="dashboard-user-role">Faculty</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Events Created</div>
+                        <div class="stat-value" id="totalEvents">0</div>
+                        <div class="stat-change">All time</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Approved Events</div>
+                        <div class="stat-value" id="approvedEvents">0</div>
+                        <div class="stat-change">Active events</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Pending Approval</div>
+                        <div class="stat-value" id="pendingEvents">0</div>
+                        <div class="stat-change">Awaiting admin review</div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-label">Total Registrations</div>
+                        <div class="stat-value" id="totalRegistrations">0</div>
+                        <div class="stat-change">Across all events</div>
+                    </div>
+                </div>
+
+                <!-- Quick Action -->
+                <div style="margin-bottom: var(--space-8);">
+                    <a href="../events/create-event.html" class="btn btn-primary btn-lg">
+                        ➕ Create New Event
+                    </a>
+                </div>
+
+                <!-- My Events Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">My Events</h2>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Registrations</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventsTableBody">
+                                <!-- Events will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireRole('faculty');
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info in header
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+        document.getElementById('welcomeMessage').textContent = `Welcome back, ${currentUser.name.split(' ')[0]}!`;
+
+        // Load statistics
+        function loadStatistics() {
+            const myEvents = EventManager.getEventsByOrganizer(currentUser.id);
+            const approved = myEvents.filter(e => e.status === 'approved');
+            const pending = myEvents.filter(e => e.status === 'pending');
+            const totalRegs = myEvents.reduce((sum, e) => sum + e.registeredCount, 0);
+
+            document.getElementById('totalEvents').textContent = myEvents.length;
+            document.getElementById('approvedEvents').textContent = approved.length;
+            document.getElementById('pendingEvents').textContent = pending.length;
+            document.getElementById('totalRegistrations').textContent = totalRegs;
+        }
+
+        // Load my events
+        function loadMyEvents() {
+            const myEvents = EventManager.getEventsByOrganizer(currentUser.id);
+            const tbody = document.getElementById('eventsTableBody');
+
+            if (myEvents.length === 0) {
+                tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: var(--space-12);">
+              <div class="empty-state">
+                <div class="empty-state-icon">📅</div>
+                <h3 class="empty-state-title">No Events Created Yet</h3>
+                <p class="empty-state-description">Create your first event to get started</p>
+                <a href="../events/create-event.html" class="btn btn-primary">Create Event</a>
+              </div>
+            </td>
+          </tr>
+        `;
+                return;
+            }
+
+            tbody.innerHTML = myEvents.map(event => {
+                let statusBadge = '';
+                if (event.status === 'approved') {
+                    statusBadge = '<span class="badge badge-approved">Approved</span>';
+                } else if (event.status === 'pending') {
+                    statusBadge = '<span class="badge badge-pending">Pending</span>';
+                } else if (event.status === 'rejected') {
+                    statusBadge = '<span class="badge badge-rejected">Rejected</span>';
+                }
+
+                return `
+          <tr>
+            <td><strong>${Utils.escapeHtml(event.title)}</strong></td>
+            <td>${Utils.formatDateShort(event.date)}</td>
+            <td><span class="badge badge-secondary">${event.category}</span></td>
+            <td>${statusBadge}</td>
+            <td>${event.registeredCount} / ${event.maxParticipants}</td>
+            <td>
+              <button class="btn btn-sm btn-outline" onclick="viewEvent(${event.id})">View</button>
+              ${event.status === 'approved' ? `<button class="btn btn-sm btn-secondary" onclick="viewRegistrations(${event.id})">Registrations</button>` : ''}
+            </td>
+          </tr>
+        `;
+            }).join('');
+        }
+
+        // View event details
+        function viewEvent(eventId) {
+            window.location.href = `../events/event-detail.html?id=${eventId}`;
+        }
+
+        // View registrations
+        function viewRegistrations(eventId) {
+            const registrations = EventManager.getEventRegistrations(eventId);
+            const event = EventManager.getEventById(eventId);
+
+            if (registrations.length === 0) {
+                Utils.showToast('No registrations yet for this event', 'info');
+                return;
+            }
+
+            const regList = registrations.map(reg =>
+                `${reg.user.name} (${reg.user.email}) - Registered on ${Utils.formatDateShort(reg.registeredAt)}`
+            ).join('\\n');
+
+            alert(`Registrations for "${event.title}":\\n\\n${regList}`);
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize dashboard
+        loadStatistics();
+        loadMyEvents();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Dashboard - Student Utility and Event Management System">
+    <title>Student Dashboard - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="student.html" class="dashboard-nav-link active">
+                                <span class="dashboard-nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../events/event-list.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📅</span>
+                                <span>All Events</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="profile.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">👤</span>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/calendar.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📆</span>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/help.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">❓</span>
+                                <span>Help</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Utilities</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="#" class="dashboard-nav-link"
+                                onclick="Utils.showToast('Academic Calendar - Coming Soon', 'info'); return false;">
+                                <span class="dashboard-nav-icon">📆</span>
+                                <span>Academic Calendar</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="#" class="dashboard-nav-link"
+                                onclick="Utils.showToast('Timetable - Coming Soon', 'info'); return false;">
+                                <span class="dashboard-nav-icon">🕒</span>
+                                <span>Timetable</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="#" class="dashboard-nav-link"
+                                onclick="Utils.showToast('Help & Support - Coming Soon', 'info'); return false;">
+                                <span class="dashboard-nav-icon">❓</span>
+                                <span>Help & Support</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome" id="welcomeMessage">Welcome back!</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">ST</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">Student</div>
+                            <div class="dashboard-user-role">Student</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="window.location.href='../events/event-list.html'">
+                        <div class="quick-action-icon">🔍</div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Browse Events</div>
+                            <div class="quick-action-description">Explore upcoming events</div>
+                        </div>
+                    </div>
+                    <div class="quick-action-card" onclick="Utils.showToast('Academic Calendar - Coming Soon', 'info')">
+                        <div class="quick-action-icon">📆</div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Calendar</div>
+                            <div class="quick-action-description">View academic calendar</div>
+                        </div>
+                    </div>
+                    <div class="quick-action-card" onclick="Utils.showToast('Timetable - Coming Soon', 'info')">
+                        <div class="quick-action-icon">🕒</div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Timetable</div>
+                            <div class="quick-action-description">Check your schedule</div>
+                        </div>
+                    </div>
+                    <div class="quick-action-card" onclick="Utils.showToast('Help & Support - Coming Soon', 'info')">
+                        <div class="quick-action-icon">💬</div>
+                        <div class="quick-action-content">
+                            <div class="quick-action-title">Support</div>
+                            <div class="quick-action-description">Get help</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">Upcoming Events</h2>
+                        <div class="dashboard-section-action">
+                            <a href="../events/event-list.html" class="btn btn-outline btn-sm">View All</a>
+                        </div>
+                    </div>
+                    <div class="event-list" id="upcomingEvents">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- My Registrations Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">My Registered Events</h2>
+                    </div>
+                    <div class="registration-list" id="myRegistrations">
+                        <!-- Registrations will be loaded here -->
+                    </div>
+                </section>
+
+                <!-- Notices Section -->
+                <section class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">Notices & Announcements</h2>
+                    </div>
+                    <div class="notices-board">
+                        <div class="notices-header">
+                            <h3 class="notices-title">📢 Important Updates</h3>
+                        </div>
+                        <ul class="notices-list" id="noticesList">
+                            <!-- Notices will be loaded here -->
+                        </ul>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireRole('student');
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info in header
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+        document.getElementById('welcomeMessage').textContent = `Welcome back, ${currentUser.name.split(' ')[0]}!`;
+
+        // Load upcoming events
+        function loadUpcomingEvents() {
+            const upcomingEvents = EventManager.getUpcomingEvents(6);
+            const container = document.getElementById('upcomingEvents');
+
+            if (upcomingEvents.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📅</div>
+            <h3 class="empty-state-title">No Upcoming Events</h3>
+            <p class="empty-state-description">Check back later for new events</p>
+          </div>
+        `;
+                return;
+            }
+
+            container.innerHTML = upcomingEvents.map(event => `
+        <div class="event-card" onclick="window.location.href='../events/event-detail.html?id=${event.id}'">
+          <div class="event-card-header">
+            <h3 class="event-card-title">${Utils.escapeHtml(event.title)}</h3>
+            <div class="event-card-meta">
+              <span class="badge badge-${event.category.toLowerCase()}">${event.category}</span>
+              <span>📅 ${Utils.formatDateShort(event.date)}</span>
+              <span>🕒 ${event.time}</span>
+            </div>
+          </div>
+          <div class="event-card-body">
+            <p class="event-card-description">${Utils.escapeHtml(event.description)}</p>
+          </div>
+          <div class="event-card-footer">
+            <div class="event-card-info">
+              <span>📍 ${Utils.escapeHtml(event.venue)}</span>
+              <span>👥 ${event.registeredCount}/${event.maxParticipants}</span>
+            </div>
+            <span class="badge badge-info">${Utils.getDaysUntil(event.date)}</span>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // Load user registrations
+        function loadMyRegistrations() {
+            const registrations = EventManager.getUserRegistrations(currentUser.id);
+            const container = document.getElementById('myRegistrations');
+
+            if (registrations.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎫</div>
+            <h3 class="empty-state-title">No Registrations Yet</h3>
+            <p class="empty-state-description">Register for events to see them here</p>
+            <a href="../events/event-list.html" class="btn btn-primary">Browse Events</a>
+          </div>
+        `;
+                return;
+            }
+
+            container.innerHTML = registrations.map(reg => `
+        <div class="registration-item">
+          <div class="registration-info">
+            <div class="registration-event-name">${Utils.escapeHtml(reg.event.title)}</div>
+            <div class="registration-event-date">
+              📅 ${Utils.formatDateShort(reg.event.date)} at ${reg.event.time} • 📍 ${Utils.escapeHtml(reg.event.venue)}
+            </div>
+          </div>
+          <div class="registration-actions">
+            <button class="btn btn-sm btn-outline" onclick="viewEvent(${reg.event.id})">View</button>
+            <button class="btn btn-sm btn-danger" onclick="cancelRegistration(${reg.event.id})">Cancel</button>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        // Load notices
+        function loadNotices() {
+            const notices = StorageManager.get(StorageManager.KEYS.NOTICES) || [];
+            const container = document.getElementById('noticesList');
+
+            if (notices.length === 0) {
+                container.innerHTML = `
+          <li class="notice-item">
+            <div class="empty-state-description">No notices at this time</div>
+          </li>
+        `;
+                return;
+            }
+
+            container.innerHTML = notices.slice(0, 5).map(notice => `
+        <li class="notice-item">
+          <div class="notice-header">
+            <div class="notice-title">${Utils.escapeHtml(notice.title)}</div>
+            <div class="notice-date">${Utils.getRelativeTime(notice.date)}</div>
+          </div>
+          <div class="notice-content">${Utils.escapeHtml(notice.content)}</div>
+        </li>
+      `).join('');
+        }
+
+        // View event details
+        function viewEvent(eventId) {
+            window.location.href = `../events/event-detail.html?id=${eventId}`;
+        }
+
+        // Cancel registration
+        function cancelRegistration(eventId) {
+            if (!confirm('Are you sure you want to cancel this registration?')) return;
+
+            const result = EventManager.cancelRegistration(eventId, currentUser.id);
+            if (result.success) {
+                Utils.showToast(result.message, 'success');
+                loadMyRegistrations();
+                loadUpcomingEvents();
+            } else {
+                Utils.showToast(result.message, 'error');
+            }
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize dashboard
+        loadUpcomingEvents();
+        loadMyRegistrations();
+        loadNotices();
+    </script>
+</body>
+
+</html>

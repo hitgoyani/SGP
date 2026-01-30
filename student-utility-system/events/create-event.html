@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create Event - Student Utility and Event Management System">
+    <title>Create Event - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .create-event-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-8);
+        }
+
+        .form-header {
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .form-title {
+            font-size: var(--font-size-3xl);
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .form-subtitle {
+            color: var(--gray-600);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-4);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="../dashboards/faculty.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="create-event.html" class="dashboard-nav-link active">
+                                <span class="dashboard-nav-icon">➕</span>
+                                <span>Create Event</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="event-list.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📅</span>
+                                <span>All Events</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome">Create New Event</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">FA</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">Faculty</div>
+                            <div class="dashboard-user-role">Faculty</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="create-event-container">
+                    <div class="form-card">
+                        <div class="form-header">
+                            <h1 class="form-title">Create New Event</h1>
+                            <p class="form-subtitle">Fill in the details below to create a new event. Your event will be
+                                sent for admin approval.</p>
+                        </div>
+
+                        <form id="createEventForm">
+                            <div class="form-group">
+                                <label for="title" class="form-label">Event Title *</label>
+                                <input type="text" id="title" class="form-input" placeholder="Enter event title"
+                                    required>
+                                <span class="form-error" id="titleError"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="category" class="form-label">Category *</label>
+                                    <select id="category" class="form-select" required>
+                                        <option value="">Select category</option>
+                                    </select>
+                                    <span class="form-error" id="categoryError"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="maxParticipants" class="form-label">Max Participants *</label>
+                                    <input type="number" id="maxParticipants" class="form-input" placeholder="e.g., 100"
+                                        min="1" required>
+                                    <span class="form-error" id="maxParticipantsError"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Description *</label>
+                                <textarea id="description" class="form-textarea"
+                                    placeholder="Provide a detailed description of the event..." rows="5"
+                                    required></textarea>
+                                <span class="form-error" id="descriptionError"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="date" class="form-label">Event Date *</label>
+                                    <input type="date" id="date" class="form-input" required>
+                                    <span class="form-error" id="dateError"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="time" class="form-label">Event Time *</label>
+                                    <input type="time" id="time" class="form-input" required>
+                                    <span class="form-error" id="timeError"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="venue" class="form-label">Venue *</label>
+                                <input type="text" id="venue" class="form-input" placeholder="e.g., Main Auditorium"
+                                    required>
+                                <span class="form-error" id="venueError"></span>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <strong>Note:</strong> Your event will be submitted for admin approval. You will be
+                                notified once it's reviewed.
+                            </div>
+
+                            <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Submit for Approval
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-lg" onclick="resetForm()">
+                                    Reset
+                                </button>
+                                <a href="../dashboards/faculty.html" class="btn btn-outline btn-lg">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireRole('faculty');
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+
+        // Load categories
+        function loadCategories() {
+            const categories = EventManager.getCategories();
+            const select = document.getElementById('category');
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+        }
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').setAttribute('min', today);
+
+        // Handle form submission
+        document.getElementById('createEventForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+
+            // Get form values
+            const formData = {
+                title: document.getElementById('title').value.trim(),
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value.trim(),
+                date: document.getElementById('date').value,
+                time: formatTime(document.getElementById('time').value),
+                venue: document.getElementById('venue').value.trim(),
+                maxParticipants: parseInt(document.getElementById('maxParticipants').value),
+                organizer: currentUser.name,
+                organizerId: currentUser.id
+            };
+
+            // Validate
+            let hasError = false;
+
+            if (!Utils.validateRequired(formData.title)) {
+                document.getElementById('titleError').textContent = 'Event title is required';
+                hasError = true;
+            }
+
+            if (!formData.category) {
+                document.getElementById('categoryError').textContent = 'Please select a category';
+                hasError = true;
+            }
+
+            if (!Utils.validateRequired(formData.description)) {
+                document.getElementById('descriptionError').textContent = 'Description is required';
+                hasError = true;
+            }
+
+            if (!formData.date) {
+                document.getElementById('dateError').textContent = 'Event date is required';
+                hasError = true;
+            } else {
+                const eventDate = new Date(formData.date);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (eventDate < today) {
+                    document.getElementById('dateError').textContent = 'Event date must be in the future';
+                    hasError = true;
+                }
+            }
+
+            if (!document.getElementById('time').value) {
+                document.getElementById('timeError').textContent = 'Event time is required';
+                hasError = true;
+            }
+
+            if (!Utils.validateRequired(formData.venue)) {
+                document.getElementById('venueError').textContent = 'Venue is required';
+                hasError = true;
+            }
+
+            if (!formData.maxParticipants || formData.maxParticipants < 1) {
+                document.getElementById('maxParticipantsError').textContent = 'Please enter a valid number';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            Utils.showLoading(submitBtn);
+
+            // Simulate network delay
+            setTimeout(() => {
+                // Create event
+                const newEvent = EventManager.createEvent(formData);
+
+                Utils.hideLoading(submitBtn);
+                Utils.showToast('Event created successfully! Awaiting admin approval.', 'success');
+
+                // Redirect to faculty dashboard
+                setTimeout(() => {
+                    window.location.href = '../dashboards/faculty.html';
+                }, 1500);
+            }, 800);
+        });
+
+        // Format time to 12-hour format
+        function formatTime(time24) {
+            const [hours, minutes] = time24.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${minutes} ${ampm}`;
+        }
+
+        // Reset form
+        function resetForm() {
+            document.getElementById('createEventForm').reset();
+            document.querySelectorAll('.form-error').forEach(el => el.textContent = '');
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        loadCategories();
+    </script>
+</body>
+
+</html>
