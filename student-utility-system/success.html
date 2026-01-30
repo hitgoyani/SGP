@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Success - Student Utility and Event Management System">
+    <title>Success - SUMS</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: var(--gray-50);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .success-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .success-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-12) var(--space-8);
+        }
+
+        .success-icon {
+            font-size: 6rem;
+            margin-bottom: var(--space-6);
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: var(--space-3);
+        }
+
+        .success-subtitle {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+
+        .success-description {
+            color: var(--gray-600);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+
+        .success-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .success-details {
+            background-color: var(--gray-50);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            margin-bottom: var(--space-6);
+            text-align: left;
+        }
+
+        .success-detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .success-detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .success-detail-label {
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .success-detail-value {
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-8);
+            text-decoration: none;
+        }
+
+        .brand-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .brand-logo {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-blue);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-icon">✅</div>
+            <h1 class="success-title">Success!</h1>
+            <h2 class="success-subtitle" id="successTitle">Action Completed Successfully</h2>
+            <p class="success-description" id="successDescription">
+                Your action has been completed successfully. You can now proceed to the next step.
+            </p>
+
+            <div class="success-details" id="successDetails" style="display: none;">
+                <!-- Details will be inserted here -->
+            </div>
+
+            <div class="success-actions" id="successActions">
+                <a href="index.html" class="btn btn-primary">Go to Home</a>
+                <a href="dashboards/student.html" class="btn btn-secondary">Go to Dashboard</a>
+            </div>
+
+            <a href="index.html" class="brand-link">
+                <div class="brand-logo">SU</div>
+                <span>Student Utility System</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Get success details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const successType = urlParams.get('type') || 'general';
+        const customTitle = urlParams.get('title');
+        const customMessage = urlParams.get('message');
+
+        // Success configurations
+        const successConfigs = {
+            'registration': {
+                title: 'Event Registration Successful',
+                description: 'You have successfully registered for the event. A confirmation email has been sent to your registered email address.',
+                icon: '🎫',
+                details: {
+                    'Event': urlParams.get('event') || 'Event Name',
+                    'Registration ID': '#' + (Math.floor(Math.random() * 10000) + 1000),
+                    'Date': new Date().toLocaleDateString()
+                },
+                actions: [
+                    { label: 'View My Events', href: 'events/my-events.html', primary: true },
+                    { label: 'Browse More Events', href: 'events/event-list.html', primary: false }
+                ]
+            },
+            'event-created': {
+                title: 'Event Created Successfully',
+                description: 'Your event has been created and submitted for admin approval. You will be notified once it is reviewed.',
+                icon: '📅',
+                details: {
+                    'Event': urlParams.get('event') || 'Event Name',
+                    'Status': 'Pending Approval',
+                    'Submitted': new Date().toLocaleDateString()
+                },
+                actions: [
+                    { label: 'View My Events', href: 'dashboards/faculty.html', primary: true },
+                    { label: 'Create Another Event', href: 'events/create-event.html', primary: false }
+                ]
+            },
+            'profile-updated': {
+                title: 'Profile Updated Successfully',
+                description: 'Your profile information has been updated successfully.',
+                icon: '✅',
+                actions: [
+                    { label: 'View Profile', href: 'dashboards/profile.html', primary: true },
+                    { label: 'Go to Dashboard', href: 'dashboards/student.html', primary: false }
+                ]
+            },
+            'event-approved': {
+                title: 'Event Approved',
+                description: 'The event has been approved and is now visible to all users.',
+                icon: '✅',
+                actions: [
+                    { label: 'View Event', href: 'events/event-detail.html', primary: true },
+                    { label: 'Back to Dashboard', href: 'dashboards/admin.html', primary: false }
+                ]
+            },
+            'general': {
+                title: 'Success',
+                description: 'Your action has been completed successfully.',
+                icon: '✅',
+                actions: [
+                    { label: 'Go to Home', href: 'index.html', primary: true },
+                    { label: 'Go to Dashboard', href: 'dashboards/student.html', primary: false }
+                ]
+            }
+        };
+
+        // Set success details
+        const config = successConfigs[successType] || successConfigs['general'];
+
+        document.getElementById('successTitle').textContent = customTitle || config.title;
+        document.getElementById('successDescription').textContent = customMessage || config.description;
+        document.querySelector('.success-icon').textContent = config.icon;
+
+        // Show details if available
+        if (config.details) {
+            const detailsContainer = document.getElementById('successDetails');
+            detailsContainer.style.display = 'block';
+            detailsContainer.innerHTML = Object.entries(config.details).map(([label, value]) => `
+                <div class="success-detail-item">
+                    <span class="success-detail-label">${label}:</span>
+                    <span class="success-detail-value">${value}</span>
+                </div>
+            `).join('');
+        }
+
+        // Set custom actions
+        if (config.actions) {
+            const actionsContainer = document.getElementById('successActions');
+            actionsContainer.innerHTML = config.actions.map(action => `
+                <a href="${action.href}" class="btn ${action.primary ? 'btn-primary' : 'btn-secondary'}">
+                    ${action.label}
+                </a>
+            `).join('');
+        }
+
+        // Update page title
+        document.title = `${config.title} - SUMS`;
+
+        // Auto-redirect after 5 seconds (optional)
+        const autoRedirect = urlParams.get('redirect');
+        if (autoRedirect) {
+            setTimeout(() => {
+                window.location.href = autoRedirect;
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>

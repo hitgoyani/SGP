@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Error - Student Utility and Event Management System">
+    <title>Error - SUMS</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: var(--gray-50);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .error-container {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            padding: var(--space-12) var(--space-8);
+        }
+
+        .error-icon {
+            font-size: 6rem;
+            margin-bottom: var(--space-6);
+        }
+
+        .error-code {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--error);
+            margin-bottom: var(--space-3);
+        }
+
+        .error-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-4);
+        }
+
+        .error-description {
+            color: var(--gray-600);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .brand-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-8);
+            text-decoration: none;
+        }
+
+        .brand-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .brand-logo {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-blue);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+            font-size: var(--font-size-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon">⚠️</div>
+            <h1 class="error-code" id="errorCode">404</h1>
+            <h2 class="error-title" id="errorTitle">Page Not Found</h2>
+            <p class="error-description" id="errorDescription">
+                The page you are looking for might have been removed, had its name changed, or is temporarily
+                unavailable.
+            </p>
+            <div class="error-actions">
+                <a href="index.html" class="btn btn-primary">Go to Home</a>
+                <button class="btn btn-secondary" onclick="history.back()">Go Back</button>
+            </div>
+
+            <a href="index.html" class="brand-link">
+                <div class="brand-logo">SU</div>
+                <span>Student Utility System</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Get error details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorType = urlParams.get('type') || '404';
+        const errorMessage = urlParams.get('message');
+
+        // Error configurations
+        const errorConfigs = {
+            '404': {
+                code: '404',
+                title: 'Page Not Found',
+                description: 'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.',
+                icon: '🔍'
+            },
+            '403': {
+                code: '403',
+                title: 'Access Denied',
+                description: 'You do not have permission to access this page. Please contact your administrator if you believe this is an error.',
+                icon: '🚫'
+            },
+            '500': {
+                code: '500',
+                title: 'Internal Server Error',
+                description: 'Something went wrong on our end. Please try again later or contact support if the problem persists.',
+                icon: '⚠️'
+            },
+            'network': {
+                code: 'Network Error',
+                title: 'Connection Failed',
+                description: 'Unable to connect to the server. Please check your internet connection and try again.',
+                icon: '📡'
+            },
+            'session': {
+                code: 'Session Expired',
+                title: 'Your Session Has Expired',
+                description: 'For your security, your session has expired. Please log in again to continue.',
+                icon: '⏱️'
+            }
+        };
+
+        // Set error details
+        const config = errorConfigs[errorType] || errorConfigs['404'];
+        document.getElementById('errorCode').textContent = config.code;
+        document.getElementById('errorTitle').textContent = config.title;
+        document.getElementById('errorDescription').textContent = errorMessage || config.description;
+        document.querySelector('.error-icon').textContent = config.icon;
+
+        // Update page title
+        document.title = `${config.code} - SUMS`;
+    </script>
+</body>
+
+</html>

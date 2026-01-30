@@ -254,8 +254,6 @@ a:hover {
 
 .btn-primary:hover:not(:disabled) {
   background-color: var(--primary-blue-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
@@ -316,8 +314,7 @@ a:hover {
 }
 
 .card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .card-header {
