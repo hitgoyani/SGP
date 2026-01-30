@@ -61,7 +61,7 @@
     width: 48px;
     height: 48px;
     background: var(--primary-blue);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -190,7 +190,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    background: var(--primary-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -260,15 +260,14 @@
 
 .quick-action-card:hover {
     box-shadow: var(--shadow-md);
-    border-color: var(--primary-blue);
-    transform: translateY(-2px);
+    background-color: var(--gray-50);
 }
 
 .quick-action-icon {
     width: 48px;
     height: 48px;
     border-radius: var(--radius-md);
-    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    background: var(--primary-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -301,7 +300,7 @@
 
 .notices-header {
     padding: var(--space-5);
-    background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+    background: var(--primary-blue);
     color: var(--white);
 }
 

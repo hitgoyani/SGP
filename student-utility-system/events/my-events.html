@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Registered Events - Student Utility and Event Management System">
+    <title>My Events - SUMS</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="sidebar">
+            <div class="dashboard-sidebar-header">
+                <a href="../index.html" class="dashboard-brand">
+                    <div class="dashboard-logo">SU</div>
+                    <div class="dashboard-brand-text">
+                        <div class="dashboard-brand-title">Student Utility</div>
+                        <div class="dashboard-brand-subtitle">CHARUSAT</div>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="dashboard-nav">
+                <div class="dashboard-nav-section">
+                    <h3 class="dashboard-nav-title">Main</h3>
+                    <ul class="dashboard-nav-list">
+                        <li class="dashboard-nav-item">
+                            <a href="../dashboards/student.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">🏠</span>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="event-list.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📅</span>
+                                <span>All Events</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="my-events.html" class="dashboard-nav-link active">
+                                <span class="dashboard-nav-icon">🎫</span>
+                                <span>My Events</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../dashboards/profile.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">👤</span>
+                                <span>My Profile</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/calendar.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">📆</span>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li class="dashboard-nav-item">
+                            <a href="../pages/help.html" class="dashboard-nav-link">
+                                <span class="dashboard-nav-icon">❓</span>
+                                <span>Help</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="dashboard-header-left">
+                    <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <h2 class="dashboard-welcome">My Registered Events</h2>
+                </div>
+                <div class="dashboard-header-right">
+                    <div class="dashboard-user">
+                        <div class="dashboard-user-avatar" id="userAvatar">ST</div>
+                        <div class="dashboard-user-info">
+                            <div class="dashboard-user-name" id="userName">Student</div>
+                            <div class="dashboard-user-role">Student</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" onclick="Auth.logout()">Logout</button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Filter Tabs -->
+                <div class="filter-bar">
+                    <button class="btn btn-primary btn-sm" id="upcomingBtn" onclick="filterEvents('upcoming')">
+                        Upcoming Events
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="pastBtn" onclick="filterEvents('past')">
+                        Past Events
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="allBtn" onclick="filterEvents('all')">
+                        All Events
+                    </button>
+                </div>
+
+                <!-- Events List -->
+                <section class="dashboard-section">
+                    <div id="eventsContainer">
+                        <!-- Events will be loaded here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/storage.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/events.js"></script>
+    <script>
+        // Check authentication
+        Auth.requireRole('student');
+
+        // Get current user
+        const currentUser = Auth.getCurrentUser();
+
+        // Update user info in header
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userAvatar').textContent = Utils.getInitials(currentUser.name);
+
+        let currentFilter = 'upcoming';
+
+        // Load registered events
+        function loadRegisteredEvents(filter = 'upcoming') {
+            const registrations = EventManager.getUserRegistrations(currentUser.id);
+            const container = document.getElementById('eventsContainer');
+
+            if (registrations.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎫</div>
+            <h3 class="empty-state-title">No Registered Events</h3>
+            <p class="empty-state-description">You haven't registered for any events yet</p>
+            <a href="event-list.html" class="btn btn-primary">Browse Events</a>
+          </div>
+        `;
+                return;
+            }
+
+            // Filter events based on date
+            let filteredEvents = registrations;
+            const now = new Date();
+
+            if (filter === 'upcoming') {
+                filteredEvents = registrations.filter(reg => new Date(reg.event.date) >= now);
+            } else if (filter === 'past') {
+                filteredEvents = registrations.filter(reg => new Date(reg.event.date) < now);
+            }
+
+            if (filteredEvents.length === 0) {
+                container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📅</div>
+            <h3 class="empty-state-title">No ${filter.charAt(0).toUpperCase() + filter.slice(1)} Events</h3>
+            <p class="empty-state-description">You don't have any ${filter} registered events</p>
+          </div>
+        `;
+                return;
+            }
+
+            container.innerHTML = `
+        <div class="event-list">
+          ${filteredEvents.map(reg => `
+            <div class="event-card">
+              <div class="event-card-header">
+                <h3 class="event-card-title">${Utils.escapeHtml(reg.event.title)}</h3>
+                <div class="event-card-meta">
+                  <span class="badge badge-${reg.event.category.toLowerCase()}">${reg.event.category}</span>
+                  <span>📅 ${Utils.formatDateShort(reg.event.date)}</span>
+                  <span>🕒 ${reg.event.time}</span>
+                </div>
+              </div>
+              <div class="event-card-body">
+                <p class="event-card-description">${Utils.escapeHtml(reg.event.description)}</p>
+                <p style="margin-top: var(--space-3); color: var(--gray-600); font-size: var(--font-size-sm);">
+                  <strong>Registered on:</strong> ${Utils.formatDateShort(reg.registeredAt)}
+                </p>
+              </div>
+              <div class="event-card-footer">
+                <div class="event-card-info">
+                  <span>📍 ${Utils.escapeHtml(reg.event.venue)}</span>
+                  <span>👥 ${reg.event.registeredCount}/${reg.event.maxParticipants}</span>
+                </div>
+                <div style="display: flex; gap: var(--space-2);">
+                  <button class="btn btn-sm btn-outline" onclick="viewEvent(${reg.event.id})">View Details</button>
+                  ${new Date(reg.event.date) >= now ? `<button class="btn btn-sm btn-danger" onclick="cancelRegistration(${reg.event.id})">Cancel</button>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+        }
+
+        // Filter events
+        function filterEvents(filter) {
+            currentFilter = filter;
+
+            // Update button states
+            document.getElementById('upcomingBtn').className = filter === 'upcoming' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+            document.getElementById('pastBtn').className = filter === 'past' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+            document.getElementById('allBtn').className = filter === 'all' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+
+            loadRegisteredEvents(filter);
+        }
+
+        // View event details
+        function viewEvent(eventId) {
+            window.location.href = `event-detail.html?id=${eventId}`;
+        }
+
+        // Cancel registration
+        function cancelRegistration(eventId) {
+            if (!confirm('Are you sure you want to cancel this registration?')) return;
+
+            const result = EventManager.cancelRegistration(eventId, currentUser.id);
+            if (result.success) {
+                Utils.showToast(result.message, 'success');
+                loadRegisteredEvents(currentFilter);
+            } else {
+                Utils.showToast(result.message, 'error');
+            }
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        loadRegisteredEvents('upcoming');
+    </script>
+</body>
+
+</html>
